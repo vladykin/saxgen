@@ -1,0 +1,168 @@
+options {
+    static = false;
+    lookahead = 2;
+    output_directory = "src/ru/vladykin/saxgen/input";
+}
+
+PARSER_BEGIN(InputParser)
+package ru.vladykin.saxgen.input;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.vladykin.saxgen.model.*;
+
+public class InputParser {
+    public List<InputElement> parse() throws ParseException {
+        List<InputElement> list = new ArrayList<InputElement>();
+        start(list);
+        return list;
+    }
+}
+PARSER_END(InputParser)
+
+MORE : { "/*" : IN_COMMENT }
+<IN_COMMENT> SPECIAL_TOKEN : { <COMMENT : "*/"> : DEFAULT }
+<IN_COMMENT> MORE : { < ~[] > }
+
+SPECIAL_TOKEN : { " " | "\t" | "\n" | "\r" | "\r\n" }
+
+TOKEN : { 
+    < LANGLE : "<" > |
+    < RANGLE : ">" > |
+    < SLASH : "/" > |
+    < LCURLY : "{" > |
+    < RCURLY : "}" > |
+    < LPAREN : "(" > |
+    < RPAREN : ")" > |
+    < ALT : "|" > |
+    < ASTERISK : "*" > |
+    < QUESTION : "?" > |
+    < EQUALS : "==" > |
+    < NOT_EQUALS : "!="> |
+    < SUBSTR_EQUALS : "=~" > |
+    < NOT_SUBSTR_EQUALS : "!~" > |
+    < OR : "||" > |
+    < AND : "&&" > |
+    < STRING : ( "\"" ( ~["\""] )* "\"" | "null" ) > |
+    < ID : ( ["a"-"z", "A"-"Z"] )+ >
+}
+
+void start(List<InputElement> list) :
+{}
+{
+      ( startTag(list) | endTag(list) | group(list) )*
+      <EOF>
+}
+
+void startTag(List<InputElement> list) :
+{
+    Token name;
+    Expr expr = null;
+    String code = null;
+}
+{
+    <LANGLE> name=<ID> ( expr=orExpr() )? <RANGLE> ( code=code() )?
+    {
+        list.add(new StartTag(name.image, expr, code));
+    }
+}
+
+void endTag(List<InputElement> list) :
+{
+    Token name;
+    String code = null;
+}
+{
+    <LANGLE> <SLASH> name=<ID> <RANGLE> ( code=code() )?
+    {
+        list.add(new EndTag(name.image, code));
+    }
+}
+
+void group(List<InputElement> list) :
+{
+    List<List<InputElement>> alternatives = new ArrayList<List<InputElement>>();
+    List<InputElement> current = new ArrayList<InputElement>();
+    alternatives.add(current);
+    Token q = null;
+}
+{
+    <LPAREN> (
+        startTag(current) |
+        endTag(current) |
+        group(current) |
+        <ALT> {
+            current = new ArrayList<InputElement>();
+            alternatives.add(current);
+        }
+    )* <RPAREN> ( q=<ASTERISK> | q=<QUESTION> )?
+    {
+        list.add(new Group(alternatives, Group.quantifier(q == null? null : q.image)));
+    }
+}
+
+String code() :
+{
+    StringBuilder buf = new StringBuilder();
+    Token token;
+}
+{
+    <LCURLY> (
+        ( token=<ID> | token=<STRING> | token="@" | token="." | token=";" | token="=" | token="," | token="(" | token=")" )
+        {
+            if (token.specialToken != null) {
+                buf.append(token.specialToken.image);
+            }
+            buf.append(token.image);
+        }
+    )* <RCURLY>
+    { return buf.toString(); }
+}
+
+Expr orExpr() :
+{
+    List<Expr> list = new ArrayList<Expr>();
+    Expr expr1, expr2;
+}
+{
+    expr1=andExpr() { list.add(expr1); }
+    ( <OR> expr2=andExpr() { list.add(expr2); } )*
+    {
+        if (list.size() == 1) {
+            return list.get(0);
+        } else {
+            return new BooleanExpr(list, BooleanExpr.Operator.OR);
+        }
+    }
+}
+
+Expr andExpr() :
+{
+    List<Expr> list = new ArrayList<Expr>();
+    Expr expr1, expr2;
+}
+{
+    expr1=term() { list.add(expr1); }
+    ( <AND> expr2=term() { list.add(expr2); } )*
+    {
+        if (list.size() == 1) {
+            return list.get(0);
+        } else {
+            return new BooleanExpr(list, BooleanExpr.Operator.AND);
+        }
+    }
+}
+
+Expr term() :
+{
+    Token attr, value;
+    Expr expr;
+}
+{
+    attr=<ID> <EQUALS> value=<STRING> { return new AttrExpr(attr.image, AttrExpr.value(value.image), AttrExpr.Operator.EQUALS); } |
+    attr=<ID> <NOT_EQUALS> value=<STRING> { return new AttrExpr(attr.image, AttrExpr.value(value.image), AttrExpr.Operator.NOT_EQUALS); } |
+    attr=<ID> <SUBSTR_EQUALS> value=<STRING> { return new AttrExpr(attr.image, AttrExpr.value(value.image), AttrExpr.Operator.SUBSTR_EQUALS); } |
+    attr=<ID> <NOT_SUBSTR_EQUALS> value=<STRING> { return new AttrExpr(attr.image, AttrExpr.value(value.image), AttrExpr.Operator.NOT_SUBSTR_EQUALS); } |
+    <LPAREN> expr=orExpr() <RPAREN> { return expr; }
+}
