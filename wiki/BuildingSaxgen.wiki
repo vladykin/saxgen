@@ -1,0 +1,7 @@
+#summary Brief instructions for building SaxGen
+
+= Building SaxGen =
+
+  * Enter `SaxGen` directory.
+  * Copy `javacc.jar` to `lib/`. Javacc can be downloaded from https://javacc.dev.java.net/
+  * Run `ant`. Build will produce `dist/SaxGen.jar`.
