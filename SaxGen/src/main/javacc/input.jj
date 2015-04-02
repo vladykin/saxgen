@@ -1,7 +1,6 @@
 options {
     static = false;
     lookahead = 2;
-    output_directory = "src/ru/vladykin/saxgen/input";
 }
 
 PARSER_BEGIN(InputParser)

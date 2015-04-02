@@ -3,7 +3,6 @@ package ru.vladykin.saxgen;
 import ru.vladykin.saxgen.state.TransitionTable;
 import ru.vladykin.saxgen.state.StateGenerator;
 import ru.vladykin.saxgen.model.EndTag;
-import ru.vladykin.saxgen.model.Group;
 import ru.vladykin.saxgen.model.Expr;
 import ru.vladykin.saxgen.model.StartTag;
 import ru.vladykin.saxgen.model.InputElement;
