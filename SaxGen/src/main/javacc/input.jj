@@ -4,12 +4,12 @@ options {
 }
 
 PARSER_BEGIN(InputParser)
-package ru.vladykin.saxgen.input;
+package name.vladykin.saxgen.input;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.vladykin.saxgen.model.*;
+import name.vladykin.saxgen.model.*;
 
 public class InputParser {
     public List<InputElement> parse() throws ParseException {

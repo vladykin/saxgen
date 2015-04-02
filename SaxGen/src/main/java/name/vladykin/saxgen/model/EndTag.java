@@ -1,6 +1,4 @@
-package ru.vladykin.saxgen.model;
-
-import ru.vladykin.saxgen.model.InputElement.Type;
+package name.vladykin.saxgen.model;
 
 /**
  * @author Alexey Vladykin

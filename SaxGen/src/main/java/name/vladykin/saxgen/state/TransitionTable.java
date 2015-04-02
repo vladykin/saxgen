@@ -1,10 +1,10 @@
-package ru.vladykin.saxgen.state;
+package name.vladykin.saxgen.state;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import ru.vladykin.saxgen.model.Tag;
+import name.vladykin.saxgen.model.Tag;
 
 /**
  * @author Alexey Vladykin

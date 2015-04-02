@@ -1,4 +1,4 @@
-package ru.vladykin.saxgen.model;
+package name.vladykin.saxgen.model;
 
 /**
  * @author Alexey Vladykin

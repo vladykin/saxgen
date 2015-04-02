@@ -1,4 +1,4 @@
-package ru.vladykin.saxgen.state;
+package name.vladykin.saxgen.state;
 
 import java.util.HashSet;
 import java.util.Set;

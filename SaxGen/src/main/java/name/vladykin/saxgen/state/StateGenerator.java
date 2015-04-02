@@ -1,9 +1,9 @@
-package ru.vladykin.saxgen.state;
+package name.vladykin.saxgen.state;
 
 import java.util.List;
-import ru.vladykin.saxgen.model.Group;
-import ru.vladykin.saxgen.model.InputElement;
-import ru.vladykin.saxgen.model.Tag;
+import name.vladykin.saxgen.model.Group;
+import name.vladykin.saxgen.model.InputElement;
+import name.vladykin.saxgen.model.Tag;
 
 /**
  * @author Alexey Vladykin

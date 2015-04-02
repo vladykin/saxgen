@@ -1,12 +1,12 @@
-package ru.vladykin.saxgen;
+package name.vladykin.saxgen;
 
-import ru.vladykin.saxgen.state.TransitionTable;
-import ru.vladykin.saxgen.state.StateGenerator;
-import ru.vladykin.saxgen.model.EndTag;
-import ru.vladykin.saxgen.model.Expr;
-import ru.vladykin.saxgen.model.StartTag;
-import ru.vladykin.saxgen.model.InputElement;
-import ru.vladykin.saxgen.model.AttrExpr;
+import name.vladykin.saxgen.state.TransitionTable;
+import name.vladykin.saxgen.state.StateGenerator;
+import name.vladykin.saxgen.model.EndTag;
+import name.vladykin.saxgen.model.Expr;
+import name.vladykin.saxgen.model.StartTag;
+import name.vladykin.saxgen.model.InputElement;
+import name.vladykin.saxgen.model.AttrExpr;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import ru.vladykin.saxgen.input.InputParser;
-import ru.vladykin.saxgen.input.ParseException;
-import ru.vladykin.saxgen.model.Tag;
+import name.vladykin.saxgen.input.InputParser;
+import name.vladykin.saxgen.input.ParseException;
+import name.vladykin.saxgen.model.Tag;
 
 /**
  * @author Alexey Vladykin
