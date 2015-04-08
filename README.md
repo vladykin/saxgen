@@ -1,5 +1,5 @@
 # SaxGen
-SAX handler generator inspired by Javacc.
+SAX handler generator for Java, inspired by Javacc.
 
 Writing SAX handlers by hand can be tedious, especially when XML file structure is complex.
 SaxGen will do this dirty job for you. Just describe file structure using Javacc-like grammar,
