@@ -33,22 +33,23 @@ public class SaxGen {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        for (String oldFilename : args) {
-            if (oldFilename.endsWith(FILE_SUFFIX)) {
-                String newFilename = oldFilename.substring(0, oldFilename.length() - FILE_SUFFIX.length()) + FILE_EXT;
-                System.err.println("Converting " + oldFilename + " to " + newFilename);
-                try {
-                    new SaxGen(new File(oldFilename), new File(newFilename)).transform();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                } catch (ParseException ex) {
-                    ex.printStackTrace();
-                }
-            } else {
-                System.err.println("Skipping file " + oldFilename);
-            }
+        if (args.length != 2) {
+            System.err.println("Usage: SaxGen srcFile dstFile");
+            System.exit(1);
+        }
+
+        String srcFile = args[0];
+        String dstFile = args[1];
+        System.err.println("Converting " + srcFile + " to " + dstFile);
+        try {
+            new SaxGen(new File(srcFile), new File(dstFile)).transform();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (ParseException ex) {
+            ex.printStackTrace();
         }
     }
+
     private final File oldFile;
     private final File newFile;
     private boolean stateWritten;
@@ -79,9 +80,7 @@ public class SaxGen {
             reader.close();
         }
     }
-    private static final String CLASS_SUFFIX = "Proto";
     private static final String FILE_EXT = ".java";
-    private static final String FILE_SUFFIX = CLASS_SUFFIX + FILE_EXT;
     private static final String LINE_PREFIX = "///";
     private static final Pattern STATE_PATTERN = Pattern.compile("^(///\\s+)SAXGEN_STATE\\b");
     private static final Pattern START_TAG_PATTERN = Pattern.compile("^(///\\s+)SAXGEN_START_TAG\\{\\s*(.*?),\\s*(.*?)\\s*\\}");
